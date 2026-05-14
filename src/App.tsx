@@ -1,11 +1,11 @@
 import { BsDice1, BsDice2, BsDice3, BsDice4, BsDice5, BsDice6 } from "react-icons/bs";
 import DiceWrapper from "./compontents/dice/diceWrapper";
 import { useState } from "react";
-import RollButton from "./compontents/rollButton";
+import { useRoll } from "./hooks/useRoll";
 
 function App() {
 	const [lockedDice, setLockedDice] = useState<number[]>([]);
-	const [currentRoll, setCurrentRoll] = useState<number[]>([1, 2, 3, 4, 5]);
+	const { currentRoll, roll } = useRoll(lockedDice);
 
 	enum DiceID {
 		One = 1,
@@ -34,20 +34,6 @@ function App() {
 
 			return [...currentDice, id];
 		});
-	};
-
-	const roll = () => {
-		const newRoll = currentRoll.map((die, index) => {
-			const isLocked = lockedDice.includes(index + 1);
-
-			if (isLocked) {
-				return die;
-			}
-
-			return Math.floor(Math.random() * 6) + 1;
-		});
-
-		setCurrentRoll(newRoll);
 	};
 
 	return (
@@ -89,7 +75,7 @@ function App() {
 					{diceIcons[currentRoll[4]]}
 				</DiceWrapper>
 				<button
-					className="p-4 w-50 bg-green-400/60 rounded-md text-4xl"
+					className="w-50 rounded-md bg-green-400/60 p-4 text-4xl"
 					onClick={() => {
 						roll();
 					}}
